@@ -3,110 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agrinho 2026 - Painel Clima Sustentável</title>
-    <!-- Esta linha abaixo conecta o HTML ao arquivo de estilos CSS -->
+    <title>Agrinho - Painel do Clima e Alerta de Geada</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- CABEÇALHO DO PROJETO -->
     <header>
-        <h1>Painel do Clima & Alerta Agrinho 2026</h1>
-        <p>Agro forte, futuro sustentável: equilíbrio entre produção e meio ambiente</p>
+        <h1>Painel do Clima e Alerta de Geada</h1>
+        <p>Agrinho 2026 - Protegendo a Agricultura do Paraná</p>
     </header>
 
     <main>
-        <!-- SELETOR DE REGIÃO (SIMULAÇÃO) -->
-        <section class="seletor-container">
-            <label for="regiao">Selecione a Região do Paraná:</label>
-            <select id="regiao" onchange="atualizarClima()">
-                <option value="norte">Região Norte (Londrina/Maringá)</option>
-                <option value="oeste">Região Oeste (Cascavel/Foz)</option>
-                <option value="sul">Região Sul (Palmas/União da Vitória)</option>
-            </select>
+        <section class="intro">
+            <h2>Simulador de Monitoramento Climático</h2>
+            <p>Este painel simula a recepção de dados de sensores de temperatura em tempo real. Use os controles deslizantes de cada região para simular quedas de temperatura. Temperaturas de <strong>2°C ou menos</strong> acionarão o Alerta Vermelho de Geada Negra para proteção imediata de lavouras de café e hortaliças.</p>
         </section>
 
-        <!-- CARDS DE LEITURA DE DADOS -->
-        <section class="painel-clima">
-            <div class="card">
-                <h3>Região Atual</h3>
-                <div class="valor" id="txt-regiao">Norte</div>
+        <section class="grid-regioes">
+            <div class="card-regiao">
+                <h2>Região Norte</h2>
+                <div class="culturas">Foco: Café e Hortaliças</div>
+                <div class="simulador">
+                    <label for="slider-norte">Ajustar Temperatura:</label>
+                    <input type="range" id="slider-norte" min="-5" max="25" value="15" oninput="atualizarTemperatura('norte')">
+                    <div class="display-temp" id="temp-norte">15°C</div>
+                </div>
             </div>
-            <div class="card" id="card-temp">
-                <h3>Temperatura</h3>
-                <div class="valor" id="txt-temp">24°C</div>
-            </div>
-            <div class="card">
-                <h3>Umidade do Ar</h3>
-                <div class="valor" id="txt-umidade">65%</div>
-            </div>
-        </section>
 
-        <!-- RECOMENDAÇÃO SUSTENTÁVEL -->
-        <section class="dica-sustentavel">
-            <h4>💡 Manejo Ecológico & Sustentável</h4>
-            <p id="txt-dica">Condições favoráveis para o manejo. Continue monitorando os índices de umidade para otimizar o uso da água na irrigação.</p>
+            <div class="card-regiao">
+                <h2>Região Oeste</h2>
+                <div class="culturas">Foco: Hortaliças e Culturas de Inverno</div>
+                <div class="simulador">
+                    <label for="slider-oeste">Ajustar Temperatura:</label>
+                    <input type="range" id="slider-oeste" min="-5" max="25" value="18" oninput="atualizarTemperatura('oeste')">
+                    <div class="display-temp" id="temp-oeste">18°C</div>
+                </div>
+            </div>
+
+            <div class="card-regiao">
+                <h2>Região Sul</h2>
+                <div class="culturas">Foco: Hortaliças de Clima Frio</div>
+                <div class="simulador">
+                    <label for="slider-sul">Ajustar Temperatura:</label>
+                    <input type="range" id="slider-sul" min="-5" max="25" value="12" oninput="atualizarTemperatura('sul')">
+                    <div class="display-temp" id="temp-sul">12°C</div>
+                </div>
+            </div>
         </section>
     </main>
 
-    <!-- POP-UP VISUAL DE ALERTA DE GEADA NEGRA -->
-    <div class="overlay-alerta" id="alerta-geada">
-        <div class="modal-alerta">
-            <h2>⚠️ ALERTA MÁXIMO!</h2>
-            <p><strong>Risco Imediato de Geada Negra detectado para a Região Sul!</strong></p>
-            <p>Temperaturas extremamente baixas com baixa umidade podem queimar o tecido interno das lavouras de café e hortaliças.</p>
-            <button class="btn-fechar" onclick="fecharAlerta()">Entendido / Aplicar Proteção</button>
+    <div class="modal-alerta" id="modalAlerta">
+        <div class="conteudo-alerta">
+            <h3>⚠️ ALERTA MÁXIMO ⚠️</h3>
+            <p><strong>Risco Imediato de Geada Negra detectado na Região <span id="regiao-alerta"></span>!</strong></p>
+            <p>Temperatura crítica igual ou inferior a 2°C. Ative imediatamente as medidas de proteção para o café e hortaliças (como irrigação ou cobertura).</p>
+            <button class="btn-fechar" onclick="fecharAlerta()">Ciente / Fechar</button>
         </div>
     </div>
 
-    <!-- RODAPÉ INFORMATIVO -->
     <footer>
-        <p>&copy; 2026 Projeto Agrinho - Tecnologia Aplicada ao Campo Sustentável Paranaense.</p>
+        <p>&copy; 2026 Projeto Agrinho - Tecnologia Aplicada ao Campo.</p>
     </footer>
 
-    <!-- LÓGICA JAVASCRIPT DE SIMULAÇÃO -->
     <script>
-        const dadosRegioes = {
-            norte: {
-                nome: "Norte",
-                temp: 24,
-                umidade: "65%",
-                dica: "Temperatura ideal para as lavouras de café. Mantenha a cobertura morta no solo para preservar a umidade natural."
-            },
-            oeste: {
-                nome: "Oeste",
-                temp: 18,
-                umidade: "70%",
-                dica: "Clima estável para grãos (soja/milho). Ótimo momento para monitoramento preventivo de pragas de forma biológica."
-            },
-            sul: {
-                nome: "Sul",
-                temp: 1, 
-                umidade: "35%",
-                dica: "ALERTA ATIVO! Aplique técnicas de proteção imediata como o cobrimento de hortaliças ou irrigação controlada por aspersão nas primeiras horas da manhã."
-            }
-        };
+        // Função que atualiza o texto da temperatura e verifica o risco de geada
+        function atualizarTemperatura(regiao) {
+            const slider = document.getElementById(`slider-${regiao}`);
+            const display = document.getElementById(`temp-${regiao}`);
+            const temperatura = parseInt(slider.value);
 
-        function atualizarClima() {
-            const seletor = document.getElementById("regiao");
-            const regiaoEscolhida = seletor.value;
-            const dados = dadosRegioes[regiaoEscolhida];
+            display.innerText = `${temperatura}°C`;
 
-            document.getElementById("txt-regiao").innerText = dados.nome;
-            document.getElementById("txt-temp").innerText = dados.temp + "°C";
-            document.getElementById("txt-umidade").innerText = dados.umidade;
-            document.getElementById("txt-dica").innerText = dados.dica;
-
-            if(dados.temp <= 2) {
-                document.getElementById("alerta-geada").classList.add("ativo");
-                document.getElementById("card-temp").style.borderBottom = "5px solid #d32f2f";
+            // Altera a cor do texto dependendo do frio
+            if (temperatura <= 2) {
+                display.style.color = '#d32f2f'; // Vermelho se crítico
+                dispararAlerta(regiao);
+            } else if (temperatura <= 5) {
+                display.style.color = '#f57c00'; // Laranja se atenção
             } else {
-                document.getElementById("card-temp").style.borderBottom = "5px solid #2e7d32";
+                display.style.color = '#2e7d32'; // Verde se seguro
             }
         }
 
+        // Função para mostrar o pop-up de alerta vermelho
+        function dispararAlerta(regiaoNome) {
+            const modal = document.getElementById('modalAlerta');
+            const spanRegiao = document.getElementById('regiao-alerta');
+            
+            spanRegiao.innerText = regiaoNome.toUpperCase();
+            modal.style.display = 'flex';
+        }
+
+        // Função para fechar o pop-up
         function fecharAlerta() {
-            document.getElementById("alerta-geada").classList.remove("ativo");
+            const modal = document.getElementById('modalAlerta');
+            modal.style.display = 'none';
         }
     </script>
 </body>
